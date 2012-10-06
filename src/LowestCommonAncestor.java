@@ -27,7 +27,7 @@ public class LowestCommonAncestor {
 	}
 	
 	static void init_matrix() {
-		for (int i = 1; i <= N; ++i) {
+		for (int i = 0; i < N; ++i) {
 			for (int j = 1; j <= MAX_LOG; j++) {
 				P[i][j] = P[P[i][j - 1]][j - 1];
 			}
@@ -80,7 +80,7 @@ public class LowestCommonAncestor {
 		int Q;
 
 		while ((N = Integer.parseInt(in.readLine())) != 0) {
-			for (int i = 1; i <= N; i++)
+			for (int i = 0; i < N; i++)
 				vecinos[i] = new LinkedList<Integer>();
 
 			for (int i = 0; i < N - 1; i++) {
@@ -114,12 +114,12 @@ public class LowestCommonAncestor {
 				}
 
 				if ((d & 1) == 0) {
-					System.out.println("The fleas meet at " + anc_dist(a, d >> 1) + ".");
+					System.out.println("The fleas meet at " + (anc_dist(a, d >> 1)+1) + ".");
 				} else {
 					int c = anc_dist(a, d >> 1);
 					int u = P[c][0];
 					System.out.println("The fleas jump forever between "
-							+ Math.min(c, u) + " and " + Math.max(u, c) + ".");
+							+ (Math.min(c, u)+1) + " and " + (Math.max(u, c)+1)+ ".");
 				}
 			}
 
