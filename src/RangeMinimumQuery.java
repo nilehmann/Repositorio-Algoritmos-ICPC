@@ -31,26 +31,16 @@ public class RangeMinimumQuery {
 		return arr[I];
 	}
 
-	static void update(int S, int T, int I, int V, int n) {
+	static int update(int S, int T, int I, int V, int n) {
 		if (S > I || T < I)
-			return;
+			return tree[n];
 		if (S == T) {
 			arr[I] = V;
-			tree[n] = compute(I);
-			return;
+			return tree[n] = compute(I);
 		}
-		tree[n] = getNewValue(S, T, I, V, n);
 		int K = (S + T) / 2 + 1;
-		update(S, K - 1, I, V, 2 * n);
-		update(K, T, I, V, 2 * n + 1);
-	}
-
-	static int getNewValue(int S, int T, int I, int V, int n) {
-		// return arr[tree[n]] < V ? tree[n] : V
-		int s = (tree[n] - arr[I] + V) % P;
-		while (s < 0)
-			s += P;
-		return s;
+		return tree[n] = concat(S, K, T, update(S, K - 1, I, V, 2 * n),
+				update(K, T, I, V, 2 * n + 1));
 	}
 
 	static int compute(int S, int T, int I, int J, int n) {
@@ -59,8 +49,15 @@ public class RangeMinimumQuery {
 		if (I <= S && J >= T)
 			return tree[n];
 		int K = (S + T) / 2 + 1;
-		return (compute(S, K - 1, I, J, 2 * n) + compute(K, T, I, J, 2 * n + 1))
-				% P;
+		return concat(S, K, T, compute(S, K - 1, I, J, 2 * n),
+				compute(K, T, I, J, 2 * n + 1));
+	}
+
+	static int pow2(int n) {
+		int l = 1;
+		while (n > l)
+			l <<= 1;
+		return l;
 	}
 
 	// Test: 12365 - Jupiter Attacks!
@@ -97,9 +94,9 @@ public class RangeMinimumQuery {
 					I = Integer.parseInt(st.nextToken()) - 1;
 					J = Integer.parseInt(st.nextToken()) - 1;
 					int h = compute(0, L - 1, I, J, 1);
-					long inv = extendedEuclideanAlgorithm(new Pair((int) powmod(
-							B, L - 1 - J), P)).a;
-					while(inv <= 0)
+					long inv = extendedEuclideanAlgorithm(new Pair(
+							(int) powmod(B, L - 1 - J), P)).a;
+					while (inv <= 0)
 						inv += P;
 					sb.append(((long) h * inv) % P + "\n");
 					break;
@@ -119,13 +116,6 @@ public class RangeMinimumQuery {
 			return powmod((n * n) % P, p / 2) % P;
 		else
 			return (n * powmod((n * n) % P, p / 2)) % P;
-	}
-
-	static int pow2(int n) {
-		int l = 1;
-		while (n > l)
-			l <<= 1;
-		return l;
 	}
 
 	static Pair extendedEuclideanAlgorithm(Pair p) {
