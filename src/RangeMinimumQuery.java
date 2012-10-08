@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class RangeMinimumQuery {
-	static int B; // Numero de valores del byte
+	static long B; // Numero de valores del byte
 	static int P; // Primo del hash
 	static int L; // Numero de bytes
 	static int N; // Numero de comandos
@@ -23,7 +23,7 @@ public class RangeMinimumQuery {
 
 	static int paste(int I, int K, int J, int V1, int V2) {
 		// return arr[V1] < arr[V2] ? V1 : V2;
-		return ((int) (((long) V1 * powmod((long) B, J + 1 - K)) % P) + V2) % P;
+		return (V1 + V2) % P;
 	}
 
 	static int compute(int I) {
@@ -47,17 +47,17 @@ public class RangeMinimumQuery {
 
 	static int getNewValue(int S, int T, int I, int V, int n) {
 		// return arr[tree[n]] < V ? tree[n] : V
-		int k = (int) ((powmod((long) B, T - I) * (long) arr[I]) % P);
-		int l = (int) ((powmod((long) B, T - I) * (long) V) % P);
-		int s = (tree[n] - k + l) % P;
-		return s >= 0 ? s : (s + P) % P;
+		int s = (tree[n] - arr[I] + V) % P;
+		while (s < 0)
+			s += P;
+		return s;
 	}
 
 	static int compute(int S, int T, int I, int J, int n) {
 		if (S > J || T < I)
 			return 0;
 		if (I <= S && J >= T)
-			return (int) (((powmod((long) B, J - T) * (long) tree[n])) % P);
+			return tree[n];
 		int K = (S + T) / 2 + 1;
 		return (compute(S, K - 1, I, J, 2 * n) + compute(K, T, I, J, 2 * n + 1))
 				% P;
@@ -73,7 +73,7 @@ public class RangeMinimumQuery {
 		int I, J;
 		while (!(line = in.readLine()).equals("0 0 0 0")) {
 			st = new StringTokenizer(line);
-			B = Integer.parseInt(st.nextToken());
+			B = Long.parseLong(st.nextToken());
 			P = Integer.parseInt(st.nextToken());
 			L = Integer.parseInt(st.nextToken());
 			N = Integer.parseInt(st.nextToken());
@@ -88,14 +88,18 @@ public class RangeMinimumQuery {
 				switch (C) {
 				case 'E':
 					I = Integer.parseInt(st.nextToken()) - 1;
-					J = Integer.parseInt(st.nextToken()) % P;
+					J = (int) ((powmod(B, L - 1 - I) * Long.parseLong(st
+							.nextToken())) % P);
 					if (arr[I] != J)
 						update(0, L - 1, I, J, 1);
 					break;
 				case 'H':
 					I = Integer.parseInt(st.nextToken()) - 1;
 					J = Integer.parseInt(st.nextToken()) - 1;
-					sb.append(compute(0, L - 1, I, J, 1) + "\n");
+					int h = compute(0, L - 1, I, J, 1);
+					int inv = extendedEuclideanAlgorithm(new Pair((int) powmod(
+							B, L - 1 - J), P)).a;
+					sb.append(((long) h * (long) inv) % P + "\n");
 					break;
 				}
 			}
@@ -110,9 +114,9 @@ public class RangeMinimumQuery {
 		if (p == 1)
 			return n % P;
 		if ((p & 1) == 0)
-			return powmod(n * n % P, p / 2) % P;
+			return powmod((n * n) % P, p / 2) % P;
 		else
-			return n * powmod(n * n % P, p / 2) % P;
+			return (n * powmod((n * n) % P, p / 2)) % P;
 	}
 
 	static int pow2(int n) {
@@ -120,5 +124,26 @@ public class RangeMinimumQuery {
 		while (n > l)
 			l <<= 1;
 		return l;
+	}
+
+	static Pair extendedEuclideanAlgorithm(Pair p) {
+		if (p.b == 0)
+			return new Pair(1, 0);
+		else {
+			int q = p.a / p.b;
+			int r = p.a % p.b;
+			Pair p1 = extendedEuclideanAlgorithm(new Pair(p.b, r));
+			return new Pair(p1.b, p1.a - q * p1.b);
+		}
+	}
+}
+
+class Pair {
+	int a;
+	int b;
+
+	public Pair(int a, int b) {
+		this.a = a;
+		this.b = b;
 	}
 }
