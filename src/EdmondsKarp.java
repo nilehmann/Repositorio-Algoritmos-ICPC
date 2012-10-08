@@ -11,9 +11,7 @@ import java.util.StringTokenizer;
 
 public class EdmondsKarp {
 	static int MAX = 100;
-	
-	//test2
-	
+		
 	static List<Integer> vecinos[] = new ArrayList[MAX];
 	static int C[][] = new int[MAX][MAX]; //Capacidad
 	static int F[][] = new int[MAX][MAX]; //Asignacion Flujo
