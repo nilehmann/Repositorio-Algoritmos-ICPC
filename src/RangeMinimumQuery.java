@@ -17,11 +17,11 @@ public class RangeMinimumQuery {
 		if (I == J)
 			return tree[n] = compute(I);
 		int K = (I + J) / 2 + 1;
-		return tree[n] = paste(I, K, J, init(I, K - 1, 2 * n),
+		return tree[n] = concat(I, K, J, init(I, K - 1, 2 * n),
 				init(K, J, 2 * n + 1));
 	}
 
-	static int paste(int I, int K, int J, int V1, int V2) {
+	static int concat(int I, int K, int J, int V1, int V2) {
 		// return arr[V1] < arr[V2] ? V1 : V2;
 		return (V1 + V2) % P;
 	}
@@ -97,9 +97,11 @@ public class RangeMinimumQuery {
 					I = Integer.parseInt(st.nextToken()) - 1;
 					J = Integer.parseInt(st.nextToken()) - 1;
 					int h = compute(0, L - 1, I, J, 1);
-					int inv = extendedEuclideanAlgorithm(new Pair((int) powmod(
+					long inv = extendedEuclideanAlgorithm(new Pair((int) powmod(
 							B, L - 1 - J), P)).a;
-					sb.append(((long) h * (long) inv) % P + "\n");
+					while(inv <= 0)
+						inv += P;
+					sb.append(((long) h * inv) % P + "\n");
 					break;
 				}
 			}
@@ -130,8 +132,8 @@ public class RangeMinimumQuery {
 		if (p.b == 0)
 			return new Pair(1, 0);
 		else {
-			int q = p.a / p.b;
-			int r = p.a % p.b;
+			long q = p.a / p.b;
+			long r = p.a % p.b;
 			Pair p1 = extendedEuclideanAlgorithm(new Pair(p.b, r));
 			return new Pair(p1.b, p1.a - q * p1.b);
 		}
@@ -139,10 +141,10 @@ public class RangeMinimumQuery {
 }
 
 class Pair {
-	int a;
-	int b;
+	long a;
+	long b;
 
-	public Pair(int a, int b) {
+	public Pair(long a, long b) {
 		this.a = a;
 		this.b = b;
 	}
