@@ -10,7 +10,6 @@ public class RangeMinimumQuery {
 	static int N; // Numero de comandos
 
 	static int[] arr = new int[100000];
-	static int log = 17;
 	static int[] tree = new int[300001];
 
 	static int init(int I, int J, int n) {
