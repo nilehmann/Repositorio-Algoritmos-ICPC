@@ -11,11 +11,10 @@ public class LowestCommonAncestor {
 
 	static int N;
 	static List<Integer> vecinos[] = new LinkedList[MAX];
-	static int P[][] = new int[MAX][MAX_LOG+1];
+	static int P[][] = new int[MAX][MAX_LOG + 1];
 	static int prof[] = new int[MAX];
 
-
-	//prof de la raiz debe ser cero y P[raiz][0] debe ser raiz
+	// prof de la raiz debe ser cero y P[raiz][0] debe ser raiz
 	static void tree(int n) {
 		for (int v : vecinos[n]) {
 			if (v != P[n][0]) {
@@ -25,7 +24,7 @@ public class LowestCommonAncestor {
 			}
 		}
 	}
-	
+
 	static void init_matrix() {
 		for (int i = 0; i < N; ++i) {
 			for (int j = 1; j <= MAX_LOG; j++) {
@@ -33,7 +32,7 @@ public class LowestCommonAncestor {
 			}
 		}
 	}
-	
+
 	static int anc_dist(int a, int dist) {
 		for (int i = 0; i <= MAX_LOG; i++) {
 			if (((1 << i) & dist) != 0) {
@@ -52,11 +51,11 @@ public class LowestCommonAncestor {
 		a = anc_dist(a, prof[a] - prof[b]);
 		if (a == b)
 			return a;
-	
-		//Para calcular logaritmo
-		//for (log = 1; 1 << log <= prof[p]; log++);
-		//log--;
-	
+
+		// Para calcular logaritmo
+		// for (log = 1; 1 << log <= prof[p]; log++);
+		// log--;
+
 		for (int i = MAX_LOG; i >= 0; --i) {
 			if (P[a][i] != P[b][i]) {
 				a = P[a][i];
@@ -66,14 +65,10 @@ public class LowestCommonAncestor {
 		return P[a][0];
 	}
 
-
-
-
-
-	
-	
-	//Test: 10938 - Flea Circus  http://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=1879
-	public static void main(String[] args) throws NumberFormatException,IOException {
+	// Test: 10938 - Flea Circus
+	// http://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=1879
+	public static void main(String[] args) throws NumberFormatException,
+			IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 
@@ -90,9 +85,9 @@ public class LowestCommonAncestor {
 				vecinos[a].add(b);
 				vecinos[b].add(a);
 			}
-			
+
 			int raiz = 0;
-			
+
 			prof[raiz] = 0;
 			P[raiz][0] = 0;
 			tree(raiz);
@@ -114,17 +109,16 @@ public class LowestCommonAncestor {
 				}
 
 				if ((d & 1) == 0) {
-					System.out.println("The fleas meet at " + (anc_dist(a, d >> 1)+1) + ".");
+					System.out.println("The fleas meet at "
+							+ (anc_dist(a, d >> 1) + 1) + ".");
 				} else {
 					int c = anc_dist(a, d >> 1);
 					int u = P[c][0];
 					System.out.println("The fleas jump forever between "
-							+ (Math.min(c, u)+1) + " and " + (Math.max(u, c)+1)+ ".");
+							+ (Math.min(c, u) + 1) + " and "
+							+ (Math.max(u, c) + 1) + ".");
 				}
 			}
-
 		}
 	}
-	
-
 }
