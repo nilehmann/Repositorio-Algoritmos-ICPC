@@ -2,24 +2,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 class Dijkstra {
-	static Pair2 heap[];
-	static int location[];
+	static int MAX = 1000000;
+	static Pair2 heap[] = new Pair2[MAX+1] ;
+	static int location[] = new int[MAX];
 	static int size;
-	static int N;
-	static int dist[];
-	static int dist2[];
 
-	static List<Pair2> vecinos[];
-	static List<Pair2> vecinos2[];
+	static int N;
+	static List<Pair2> vecinos[] = new ArrayList[MAX];
+	static List<Pair2> vecinos2[] = new ArrayList[MAX];
+	static int dist[] = new int[MAX+1];
 
 	// Test: 721 - Invitation Cards
 	// http://http://livearchive.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3548
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {		
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		int T = Integer.parseInt(in.readLine());
@@ -29,50 +30,50 @@ class Dijkstra {
 			N = Integer.parseInt(st.nextToken());
 			Q = Integer.parseInt(st.nextToken());
 
-			vecinos = new ArrayList[N];
-			vecinos2 = new ArrayList[N];
-
-			dist = new int[N];
-			dist2 = new int[N];
 
 			for (int i = 0; i < N; i++) {
 				vecinos[i] = new ArrayList<Pair2>();
 				vecinos2[i] = new ArrayList<Pair2>();
 			}
 
-			initHeap(N);
+			resetHeap();
 
 			while (Q-- > 0) {
 				st = new StringTokenizer(in.readLine());
 				int n1 = Integer.parseInt(st.nextToken()) - 1;
 				int n2 = Integer.parseInt(st.nextToken()) - 1;
 				int d = Integer.parseInt(st.nextToken());
+				if(n1!=n2){
 				vecinos[n1].add(new Pair2(n2, d));
 				vecinos2[n2].add(new Pair2(n1, d));
+				}
 			}
-			dijkstra(0, vecinos, dist);
+			dijkstra(0, vecinos);
 			int sum = 0;
 			for (int i = 0; i < N; i++)
 				sum += dist[i];
-			dijkstra(0, vecinos2, dist2);
+			dijkstra(0, vecinos2);
 			for (int i = 0; i < N; i++)
-				sum += dist2[i];
+				sum += dist[i];
+			
 			System.out.println(sum);
 		}
 	}
 
-	static void initHeap(int n) {
+	static void resetHeap() {
 		size = 0;
-		heap = new Pair2[n + 1];
-		location = new int[n + 1];
+		Arrays.fill(heap, null);
 	}
 
-	static void dijkstra(int s, List<Pair2> graph[], int dist[]) {
+	static void dijkstra(int s, List<Pair2> graph[]) {
+		heap[++size] = new Pair2(s, 0);
+		location[s] = size;
 		for (int i = 0; i < N; i++) {
-			if (i != s)
-				put(new Pair2(i, Integer.MAX_VALUE));
+			if (i != s){
+				heap[++size]=(new Pair2(i, Integer.MAX_VALUE));
+				location[i] = size;
+			}
 		}
-		put(new Pair2(s, 0));
 		while (!empty()) {
 			Pair2 p = get();
 			dist[p.key] = p.val;
@@ -91,6 +92,7 @@ class Dijkstra {
 	static void update(int key, int val) {
 		int i = location[key];
 		heap[i].val = val;
+		
 		bubbleup(i);
 		bubbledown(i);
 	}
