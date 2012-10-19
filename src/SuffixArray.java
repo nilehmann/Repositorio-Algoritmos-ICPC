@@ -2,17 +2,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.StringTokenizer;
 
-/*No calcula la matriz usa comparador*/
+/*Calcula toda la matriz usando entradas que implementan comparable*/
 public class SuffixArray {
-	static int maxlen= 100002;
+	static int maxlg = 20;
+	static int maxlen = 100000;
 	
-	
-	static int P[], b[], lcp[], N;
-	static Integer sa[];
-	static StringBuilder S;
+	static String S;
+	static int N;
+	static entry sa[];
+	static int	P[][];
+	static int stp;
+	static int lcp[];
 	
 	
 	public static void main(String[] args) throws IOException {
@@ -21,60 +23,61 @@ public class SuffixArray {
 		StringTokenizer st;
 		
 		
-		P = new int[maxlen];
-		b = new int[maxlen];
+		P = new int[maxlg][maxlen];
+		sa = new entry[maxlen];
 		lcp = new int[maxlen];
-		sa = new Integer[maxlen];
 		
-		int T = Integer.parseInt(in.readLine());
-		while (T-- > 0) {
-			S = new StringBuilder();
-			S.append(in.readLine());
-			S.append('$');
+		S = in.readLine();
+		while (S.charAt(0) != '*') {
 			N = S.length();
 			buildSA();
 			
+//			for (int i = 0; i < N; i++) {
+//				System.out.println(S.substring(sa[i].p));
+//			}
+						
 			int c = 0;
+			int lcpant = 0;
 			int l;
-			
-			buildLCP();
+//			buildLCP();
 			for (int i = 1; i < N; i++) {
-				l = lcp[i];
-				c += N-sa[i] - 1  - l;
+//				l = lcp[i];
+				l = getlcp(sa[i].p, sa[i-1].p);
+				
+				if(l >= lcpant){
+					c += l -lcpant;
+				}
+				lcpant = l;
 			}
 			System.out.println(c);
+			
+
+			S = in.readLine();		
 		}
 		
 	}
 	
 	
-	
-	static void buildSA() {		
-		for (int i = 0; i < N; i++){
-			sa[i] = i; 
-			P[i] = S.charAt(i);
-		}
-		Comp cmp = new Comp(0,P);
-		b[0] = 0;
-		b[N - 1] = 0;
-		for (int cnt = 1; b[N - 1] != N - 1; cnt <<= 1) {
-			cmp.cnt = cnt;
-			Arrays.sort(sa,0, N, cmp);
-			for (int i = 0; i < N - 1; i++)
-				b[i + 1] = b[i] + (cmp.compare(sa[i], sa[i + 1]) < 0 ? 1:0);
-			for (int i = 0; i < N; i++)
-				P[sa[i]] = b[i];
-		}
+	static int getlcp ( int x, int y) {
+		int k, ret = 0;
+		if (x == y) return N - x;
+		for (k = stp - 1; k >= 0 && x < N && y < N; k--)		
+			if (P[k][x] == P[k][y]){
+				x += 1 << k; 
+				y += 1 << k; 
+				ret += 1 << k;
+			}
+		return ret;
 	}
 	
-
+	
 	static void buildLCP() {
 		int h = 0, rank[] = new int[N];
 		for (int i = 0; i < N; i++) 
-			rank[sa[i]] = i;
+			rank[sa[i].p] = i;
 		for (int i = 0; i < N; i++) {
 			if(rank[i] > 0){
-				int k = sa[rank[i] - 1]; //El que viene antes del sufijo que parte en i;
+				int k = sa[rank[i] - 1].p; //El que viene antes del sufijo que parte en i;
 				while(i+h < N && k+h < N && S.charAt(i+h) == S.charAt(k+h)) h++;
 				lcp[rank[i]] = h;
 				if(h > 0) h--;
@@ -82,24 +85,56 @@ public class SuffixArray {
 		}
 	}
 	
+	static void buildSA(){
+		for (int i = 0; i < N; i++) {
+			P[0][i] = S.charAt(i);		
+		}
+		
+		int cnt;
+		boolean salir = false;
+		for(stp = 1, cnt = 1; !salir; cnt <<=1 , ++stp ){
+			for (int i = 0; i < N; i++) {
+				int b = i+cnt < N ? P[stp-1][i+cnt] : -1;
+				sa[i] = new entry(P[stp-1][i], b, i);
+			}
+			Arrays.sort(sa,0, N);
+			
+			salir = true;
+			for (int i = 0; i < N; i++) {
+				if(i > 0 && sa[i].equals(sa[i-1])){
+					salir = false;
+					P[stp][sa[i].p] = P[stp][sa[i-1].p];
+				}
+				else
+					P[stp][sa[i].p] = i;
+			}
+		}
+	}
 	
 }
 
-
-class Comp implements Comparator<Integer>{
-	int cnt, P[];
+class entry implements Comparable<entry>{
+	int p;
+	int first;
+	int second;
 	
-	public Comp(int a, int b[]){
-		cnt = a;
-		P = b;
+	public entry(int a, int b, int c){
+		first = a;
+		second = b;
+		p = c;
 	}
 	
-
+	
+	public boolean equals(Object o){
+		entry e = (entry) o;
+		return e.first == this.first && this.second == e.second;
+	}
+	
 	@Override
-	public int compare(Integer a, Integer b) {		
-		if(P[a] == P[b])
-			return P[a+cnt] - P[b+cnt];
-		return P[a] - P[b];
+	public int compareTo(entry o) {
+		if(this.first == o.first)
+			return this.second - o.second;
+		return this.first - o.first;
 	}
 	
 }
