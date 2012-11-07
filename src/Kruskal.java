@@ -7,13 +7,12 @@ public class Kruskal {
 	static int VMAX = 100000;
 	static int EMAX = 100000;
 	
-	static int parent[] = new int[EMAX];
-	static int rank[] = new int[EMAX];
 	static int E;
 	static int V;
 	static Edge edges[] = new Edge[EMAX];
-	
 
+	static int parent[] = new int[EMAX];
+	static int rank[] = new int[EMAX];
 	
 	static List<Edge> kruskal(){
 		init();
