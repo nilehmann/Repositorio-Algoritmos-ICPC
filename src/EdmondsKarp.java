@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class EdmondsKarp {
 	static int MAX = 100;
 
-	static List<Integer> vecinos[] = new ArrayList[MAX];
+	static List<Integer> graph[] = new ArrayList[MAX];
 	static int C[][] = new int[MAX][MAX]; // Capacidad
 	static int F[][] = new int[MAX][MAX]; // Asignacion Flujo
 	static int P[] = new int[MAX]; // Camino;
@@ -48,7 +48,7 @@ public class EdmondsKarp {
 		while (!q.isEmpty()) {
 			int u = q.poll();
 
-			for (int v : vecinos[u]) {
+			for (int v : graph[u]) {
 				int cf = C[u][v] - F[u][v];
 				if (cf > 0 && P[v] == -1) {
 					P[v] = u;
@@ -80,7 +80,7 @@ public class EdmondsKarp {
 			e = Integer.parseInt(st.nextToken());
 
 			for (int i = 0; i < N; i++) {
-				vecinos[i] = new ArrayList<Integer>();
+				graph[i] = new ArrayList<Integer>();
 				Arrays.fill(C[i], 0, N, 0);
 				Arrays.fill(F[i], 0, N, 0);
 			}
@@ -90,8 +90,8 @@ public class EdmondsKarp {
 				u = Integer.parseInt(st.nextToken()) - 1;
 				v = Integer.parseInt(st.nextToken()) - 1;
 				c = Integer.parseInt(st.nextToken());
-				vecinos[u].add(v);
-				vecinos[v].add(u);
+				graph[u].add(v);
+				graph[v].add(u);
 				C[u][v] = C[v][u] += c;
 			}
 			sb.append("Network " + (network++) + "\n");

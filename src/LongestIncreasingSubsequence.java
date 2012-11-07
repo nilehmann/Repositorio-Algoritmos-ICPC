@@ -21,8 +21,6 @@ public class LongestIncreasingSubsequence{
 			System.out.print(A[i]+" ");
 		}
 		System.out.println();
-		
-		
 	}
 	
 	
