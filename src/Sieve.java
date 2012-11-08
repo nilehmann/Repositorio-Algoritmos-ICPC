@@ -30,10 +30,11 @@ public class Sieve {
 	
 	static int pow(int base, int exp){
 		int pow = 1;
-		for(int i = 0; i < 32; ++i){
-			if((exp & (1 << i)) != 0)
+		while(exp > 0){
+			if((exp & 1 ) != 0)
 				pow *= base;
 			base *= base;
+			exp >>= 1;
 		}
 		return pow;
 	}
