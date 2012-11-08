@@ -4,13 +4,12 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class geometria {
-	
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String s;
-		
-		while(!(s = in.readLine()).equals("0 0 0 0 0 0 0 0"))
-		{
+
+		while (!(s = in.readLine()).equals("0 0 0 0 0 0 0 0")) {
 			StringTokenizer st = new StringTokenizer(s);
 			double x1 = Double.parseDouble(st.nextToken());
 			double y1 = Double.parseDouble(st.nextToken());
@@ -20,14 +19,15 @@ public class geometria {
 			double y3 = Double.parseDouble(st.nextToken());
 			double x4 = Double.parseDouble(st.nextToken());
 			double y4 = Double.parseDouble(st.nextToken());
-			
+
 			Point p1 = new Point(x1, y1);
 			Point p2 = new Point(x2, y2);
 			Point p3 = new Point(x3, y3);
 			Point p4 = new Point(x4, y4);
-			
-			int sentido = sentido(p1,p4,p2);
-			if(sentido == sentido(p2,p4,p3) && sentido == sentido(p3,p4,p1))
+
+			int sentido = sentido(p1, p4, p2);
+			if (sentido == sentido(p2, p4, p3)
+					&& sentido == sentido(p3, p4, p1))
 				System.out.println("Ah, sí, sí, sí.");
 			else
 				System.out.println("Nunca fue mi intención.");
@@ -40,10 +40,10 @@ public class geometria {
 		double y1 = p2.y - p1.y;
 		double y2 = p3.y - p2.y;
 		double cross = x1 * y2 - y1 * x2;
-		
-		if(cross == 0)
+
+		if (cross == 0)
 			return 0;
-		if(cross > 0)
+		if (cross > 0)
 			return 1;
 		return -1;
 	}
