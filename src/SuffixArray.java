@@ -31,9 +31,6 @@ public class SuffixArray {
 			N = S.length();
 			buildSA();
 			
-//			for (int i = 0; i < N; i++) {
-//				System.out.println(S.substring(sa[i].p));
-//			}
 						
 			int c = 0;
 			int lcpant = 0;
