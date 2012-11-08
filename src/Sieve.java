@@ -28,16 +28,16 @@ public class Sieve {
 		return coprimes;
 	}
 	
-	static int pow(int x, int a){
-		if(a == 0)
-			return 1;
-		if((a & 1) == 0){
-			int b = pow(x, a/2);
-			return b*b;
+	static int pow(int base, int exp){
+		int pow = 1;
+		for(int i = 0; i < 32; ++i){
+			if((exp & (1 << i)) != 0)
+				pow *= base;
+			base *= base;
 		}
-		return x*pow(x,a-1);
+		return pow;
 	}
-	
+
 	
 	static void init_sieve(){
 		for(int i = 4; i < MAX; i += 2)
