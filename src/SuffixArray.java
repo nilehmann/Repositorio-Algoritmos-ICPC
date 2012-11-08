@@ -22,7 +22,6 @@ public class SuffixArray {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		
 		P = new int[maxlg][maxlen];
 		sa = new entry[maxlen];
 		lcp = new int[maxlen];
