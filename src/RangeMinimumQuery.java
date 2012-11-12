@@ -20,7 +20,7 @@ public class RangeMinimumQuery {
 				init(K, J, 2 * n + 1));
 	}
 
-	//---------- Modificar desde aqu’ ----------
+	// ---------- Modificar desde aqu’ ----------
 	static int concat(int I, int K, int J, int V1, int V2) {
 		// return arr[V1] < arr[V2] ? V1 : V2;
 		return (V1 + V2) % P;
@@ -30,12 +30,13 @@ public class RangeMinimumQuery {
 		// return I;
 		return arr[I];
 	}
-	
-	static int identity(){
-		//return Integer.MAX_VALUE;
+
+	static int identity() {
+		// return Integer.MAX_VALUE;
 		return 0;
 	}
-	//---------- Modificar hasta aqu’ ----------
+
+	// ---------- Modificar hasta aqu’ ----------
 
 	static int update(int S, int T, int I, int V, int n) {
 		if (S > I || T < I)
