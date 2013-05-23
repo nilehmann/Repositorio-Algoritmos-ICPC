@@ -22,7 +22,7 @@ public class KMP {
 			int i = f[j - 1];
 			while (i > 0 && pattern[i] != pattern[j])
 				i = f[i];
-			
+
 			if (pattern[i] == pattern[j])
 				f[j] = i;
 			else
@@ -34,10 +34,10 @@ public class KMP {
 		while (k < text.length && j < pattern.length) {
 			while (j > 0 && text[k] != pattern[j])
 				j = f[j];
-			
+
 			if (text[k] == pattern[j])
 				j++;
-			
+
 			k++;
 		}
 		if (j == pattern.length)
