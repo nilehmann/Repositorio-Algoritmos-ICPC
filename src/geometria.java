@@ -28,9 +28,9 @@ public class geometria {
 			int sentido = sentido(p1, p4, p2);
 			if (sentido == sentido(p2, p4, p3)
 					&& sentido == sentido(p3, p4, p1))
-				System.out.println("Ah, sí, sí, sí.");
+				System.out.println("p4 está en el interior del triángulo");
 			else
-				System.out.println("Nunca fue mi intención.");
+				System.out.println("p4 está afuera");
 		}
 	}
 
